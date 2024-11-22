@@ -71,6 +71,11 @@
         <a href="javascript:void(0)" onclick="showSection('games')">Games</a>
         <a href="javascript:void(0)" onclick="showSection('log')">Update log</a>
         <a href="javascript:void(0)" onclick="showSection('abouts')">About</a>
+        <a href="javascript:void(0)" onclick="showSection('modding')">Modding Tools</a>
+        <a href="javascript:void(0)" onclick="showSection('Webhook')">Webhook send</a>
+</div>
+
+
     </div>
     
     <div id="home" class="section active">
@@ -78,7 +83,7 @@
         <h3>By Kirk aka Vatz</h3>
         <p>welcome to Odds Website Made by kirk</p>
         <img src="screenshot.png" alt="Screenshot" style="max-width: 100%; height: auto; border-radius: 10px;">
-      </div>
+    </div>
 
     <div id="links" class="section">
         <h2>Links</h2>
@@ -99,10 +104,76 @@
     <div id="log" class="section">
         <h4> First Release: Update 11-20: Added Games, My github, discord server, and Navigation bar </h4>
         <h4> Second Release: Update 11-20: Added An about section and 2 more games. </h4>
+        <h4> Third Release: Update 11-21: Added a modding section. </h4>
     </div>
 
     <div id="abouts" class="section">
         <h3>This website was made for odd and for everyone in the server to play games and have fun</h3>
     </div>
+
+    <div id="modding" class="section">
+        <h2>Modding Tools</h2>
+        <p>Welcome to the modding tools section! Here you can find resources to create or install mods for Gorilla Tag and related games.</p>
+        <a href="https://raw.githubusercontent.com/kirk-vatz/Modding-Guide/refs/heads/main/MOddingguide.txt" target="_blank" class="link">Modding Guide</a>
+        <a href="https://xdaforums.com/t/tool-apk-toolkit-v1-2-windows.4572881/" target="_blank" class="link">Download APK TOOLKIT</a>
+        <a href="https://github.com/nesrak1/UABEA" target="_blank" class="link">Download UABEA</a>
+        <a href="https://discord.gg/KmTZTqDgmG" target="_blank" class="link">Join the Modding Community</a>
+    </div>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+<div id="Webhook" class="section">
+  <body>
+
+    <h1>send message to discord webhook</h1>
+    <input type="text" id="webhookUrl" placeholder="enter discord webhook URL" />
+    <br/>
+    <textarea id="message" placeholder="enter your message here" rows="4" cols="50"></textarea>
+    <br/>
+    <button onclick="sendMessage()">send message</button>
+
+    <div class="message" id="resultMessage"></div>
+
+    <script>
+        function sendMessage() {
+            const webhookUrl = document.getElementById('webhookUrl').value;
+            const message = document.getElementById('message').value;
+
+            if (!webhookUrl || !message) {
+                alert('Please provide both a webhook URL and a message!');
+                return;
+            }
+
+            const payload = {
+                content: message
+            };
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('resultMessage').innerText = 'Message sent successfully!';
+                } else {
+                    document.getElementById('resultMessage').innerText = 'Failed to send message!';
+                }
+            })
+            .catch(error => {
+                document.getElementById('resultMessage').innerText = 'Error sending message: ' + error;
+            });
+        }
+    </script>
+
+</body>
