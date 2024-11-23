@@ -52,6 +52,10 @@
         .link:hover, .game-link:hover {
             background-color: #333333;
         }
+        #current-time, #timer {
+            font-size: 18px;
+            margin-top: 20px;
+        }
     </style>
     <script>
         function showSection(sectionId) {
@@ -62,6 +66,31 @@
             // Show the selected section
             document.getElementById(sectionId).classList.add('active');
         }
+
+        // Function to update the current time
+        function updateCurrentTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('current-time').innerText = `Current Time: ${timeString}`;
+        }
+
+        // Timer to track how long the user has been on the page
+        let startTime = Date.now();
+        function updateTimer() {
+            const elapsedTime = Date.now() - startTime;
+            const seconds = Math.floor(elapsedTime / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            const timeString = `${hours}:${String(minutes % 60).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+            document.getElementById('timer').innerText = `Time spent on site: ${timeString}`;
+        }
+
+        // Initialize time functions
+        setInterval(updateCurrentTime, 1000);  // Update current time every second
+        setInterval(updateTimer, 1000);  // Update timer every second
     </script>
 </head>
 <body>
@@ -73,16 +102,32 @@
         <a href="javascript:void(0)" onclick="showSection('abouts')">About</a>
         <a href="javascript:void(0)" onclick="showSection('modding')">Modding Tools</a>
         <a href="javascript:void(0)" onclick="showSection('Webhook')">Webhook send</a>
-</div>
+        <a href="javascript:void(0)" onclick="showSection('signup')">Signup</a>
+        </div>
 
-
-    </div>
-    
     <div id="home" class="section active">
         <h1>Odds Website</h1>
         <h3>By Kirk aka Vatz</h3>
-        <p>welcome to Odds Website Made by kirk</p>
-        <img src="screenshot.png" alt="Screenshot" style="max-width: 100%; height: auto; border-radius: 10px;">
+        <p>Welcome to Odds Website Made by Kirk</p>
+       <p id="current-time"></p>
+        <p id="timer"></p>
+        <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+<script>
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+    if(localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+    }
+</script>
+<style>
+    .dark-mode {
+        background-color: #333;
+        color: #fff;
+    }
+</style>
+
     </div>
 
     <div id="links" class="section">
@@ -104,7 +149,8 @@
     <div id="log" class="section">
         <h4> First Release: Update 11-20: Added Games, My github, discord server, and Navigation bar </h4>
         <h4> Second Release: Update 11-20: Added An about section and 2 more games. </h4>
-        <h4> Third Release: Update 11-21: Added a modding section. And a webhook send </h4>
+        <h4> Third Release: Update 11-21: Added a modding section. and a webhook send</h4>
+        <h4> Forth Release: Update 11-22: Added the current time and how long u have been on the website. </h4>
     </div>
 
     <div id="abouts" class="section">
@@ -119,61 +165,66 @@
         <a href="https://github.com/nesrak1/UABEA" target="_blank" class="link">Download UABEA</a>
         <a href="https://discord.gg/KmTZTqDgmG" target="_blank" class="link">Join the Modding Community</a>
     </div>
+
+    <div id="Webhook" class="section">
+        <h1>Send message to discord webhook</h1>
+        <input type="text" id="webhookUrl" placeholder="Enter Discord webhook URL" />
+        <br/>
+        <textarea id="message" placeholder="Enter your message here" rows="4" cols="50"></textarea>
+        <br/>
+        <button onclick="sendMessage()">Send Message</button>
+
+        <div class="message" id="resultMessage"></div>
+
+        <script>
+            function sendMessage() {
+                const webhookUrl = document.getElementById('webhookUrl').value;
+                const message = document.getElementById('message').value;
+
+                if (!webhookUrl || !message) {
+                    alert('Please provide both a webhook URL and a message!');
+                    return;
+                }
+
+                const payload = {
+                    content: message
+                };
+
+                fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('resultMessage').innerText = 'Message sent successfully!';
+                    } else {
+                        document.getElementById('resultMessage').innerText = 'Failed to send message!';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('resultMessage').innerText = 'Error sending message: ' + error;
+                });
+            }
+        </script>
+    </div>
 </body>
 </html>
 
 
 
+<div id="signup" class="section">
 
-
-
-
-
-
-<div id="Webhook" class="section">
-  <body>
-
-    <h1>send message to discord webhook</h1>
-    <input type="text" id="webhookUrl" placeholder="enter discord webhook URL" />
-    <br/>
-    <textarea id="message" placeholder="enter your message here" rows="4" cols="50"></textarea>
-    <br/>
-    <button onclick="sendMessage()">send message</button>
-
-    <div class="message" id="resultMessage"></div>
-
+<div>
+        <button onclick="loginUser()">SignUp</button>
+        <p>Signup to odds website. </p>
+    </div>
     <script>
-        function sendMessage() {
-            const webhookUrl = document.getElementById('webhookUrl').value;
-            const message = document.getElementById('message').value;
-
-            if (!webhookUrl || !message) {
-                alert('Please provide both a webhook URL and a message!');
-                return;
-            }
-
-            const payload = {
-                content: message
-            };
-
-            fetch(webhookUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            })
-            .then(response => {
-                if (response.ok) {
-                    document.getElementById('resultMessage').innerText = 'Message sent successfully!';
-                } else {
-                    document.getElementById('resultMessage').innerText = 'Failed to send message!';
-                }
-            })
-            .catch(error => {
-                document.getElementById('resultMessage').innerText = 'Error sending message: ' + error;
-            });
+        function loginUser() {
+            // Simulate login logic
+            alert("signup was good.");
         }
     </script>
-
-</body>
+</div>    
