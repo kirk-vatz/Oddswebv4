@@ -100,7 +100,7 @@
         <a href="javascript:void(0)" onclick="showSection('games')">Games</a>
         <a href="javascript:void(0)" onclick="showSection('log')">Update log</a>
         <a href="javascript:void(0)" onclick="showSection('abouts')">About</a>
-        <a href="javascript:void(0)" onclick="showSection('modding')">Modding Tools</a>
+        <a href="javascript:void(0)" onclick="showSection('ip')">IP Tools</a>
         <a href="javascript:void(0)" onclick="showSection('Webhook')">Webhook send</a>
         <a href="javascript:void(0)" onclick="showSection('signup')">Signup</a>
         </div>
@@ -109,8 +109,7 @@
         <h1>Odds Website</h1>
         <h3>By Kirk aka Vatz</h3>
         <p>Welcome to Odds Website Made by Kirk</p>
-<img src="https://raw.githubusercontent.com/kirk-vatz/Oddswebv7/refs/heads/main/Screenshot.ico" alt="Example Image" width="500" height="500">         
-        <p id="current-time"></p>
+       <p id="current-time"></p>
         <p id="timer"></p>
         <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
 <script>
@@ -151,21 +150,59 @@
         <h4> First Release: Update 11-20: Added Games, My github, discord server, and Navigation bar </h4>
         <h4> Second Release: Update 11-20: Added An about section and 2 more games. </h4>
         <h4> Third Release: Update 11-21: Added a modding section. and a webhook send</h4>
-        <h4> Forth Release: Update 11-22: Added the current time and how long u have been on the website. and added a signup page and darkmode.</h4>
+        <h4> Forth Release: Update 11-22: Added the current time and how long u have been on the website. </h4>
     </div>
 
     <div id="abouts" class="section">
         <h3>This website was made for odd and for everyone in the server to play games and have fun</h3>
     </div>
-
-    <div id="modding" class="section">
-        <h2>Modding Tools</h2>
-        <p>Welcome to the modding tools section! Here you can find resources to create or install mods for Gorilla Tag and related games.</p>
-        <a href="https://raw.githubusercontent.com/kirk-vatz/Modding-Guide/refs/heads/main/MOddingguide.txt" target="_blank" class="link">Modding Guide</a>
-        <a href="https://xdaforums.com/t/tool-apk-toolkit-v1-2-windows.4572881/" target="_blank" class="link">Download APK TOOLKIT</a>
-        <a href="https://github.com/nesrak1/UABEA" target="_blank" class="link">Download UABEA</a>
-        <a href="https://discord.gg/KmTZTqDgmG" target="_blank" class="link">Join the Modding Community</a>
+    <div id="ip" class="section">
+        <h1>ip lookup</h1>
+        <input type="text" id="inputIp" placeholder="Enter IP address (e.g., 8.8.8.8)" />
+        <button id="lookupInputBtn">Look Up IP</button>
+        <div class="ip-info" id="ipLookupInfo"></div>
+    
+        <script>
+            document.getElementById("lookupInputBtn").addEventListener("click", function () {
+                const inputIp = document.getElementById("inputIp").value.trim();
+    
+                if (!inputIp) {
+                    alert("Please enter a valid IP address.");
+                    return;
+                }
+    
+                const url = `https://ipwhois.app/json/${inputIp}`;
+    
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Failed to fetch IP details.");
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const infoDiv = document.getElementById("ipLookupInfo");
+                        if (data.success === false) {
+                            infoDiv.innerHTML = `<p>Error: ${data.message}</p>`;
+                            return;
+                        }
+                        infoDiv.innerHTML = `
+                            <h2>ip details:</h2>
+                            <p><strong>ip address:</strong> ${data.ip}</p>
+                            <p><strong>city:</strong> ${data.city || "N/A"}</p>
+                            <p><strong>region:</strong> ${data.region || "N/A"}</p>
+                            <p><strong>country:</strong> ${data.country || "N/A"} (${data.country_code})</p>
+                            <p><strong>isp:</strong> ${data.isp || "N/A"}</p>
+                        `;
+                    })
+                    .catch(error => {
+                        console.error("Error fetching IP details:", error);
+                        document.getElementById("ipLookupInfo").innerHTML = "<p>Could not fetch IP details. Please try again later.</p>";
+                    });
+            });
+        </script>
     </div>
+
 
     <div id="Webhook" class="section">
         <h1>Send message to discord webhook</h1>
